@@ -5,6 +5,7 @@ publish_sql_projects () {
         echo "The SQL_PASSWORD is not set in .env. Fix "
         exit 1
     else
+        dotnet publish -c Release "src/mssql/Common/Common.csproj" /p:TargetUser=sa /p:TargetPassword=${SQL_PASSWORD}
         dotnet publish -c Release "src/mssql/Products/Products.csproj" /p:TargetUser=sa /p:TargetPassword=${SQL_PASSWORD}
     fi
 }
@@ -20,8 +21,15 @@ wait_sqlserver () {
 
     for ((i=1; i<=MAX_RETRIES; i++)); do
         if nc -z "$HOST" "$PORT"; then
-            echo "✅ SQL Server is up and running!"
-            return 0
+            echo "✅ SQL Server port is open!"
+            # Check if SQL Server is ready
+            if /opt/mssql-tools/bin/sqlcmd -S "$HOST,$PORT" -U sa -P "$SQL_PASSWORD" -Q "SELECT 1" &> /dev/null; then
+                echo "✅ SQL Server is ready!"
+                return 0
+            else
+                echo "❌ SQL Server is not ready yet. Retrying..."
+                sleep "$RETRY_INTERVAL"
+            fi
         else
             echo "⏳ Attempt $i/$MAX_RETRIES: SQL Server not available yet. Retrying in $RETRY_INTERVAL seconds..."
             sleep "$RETRY_INTERVAL"

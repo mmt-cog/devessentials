@@ -7,7 +7,6 @@ if [ -z "$1" ]; then
 fi
 
 set -a
-source setup-db/.env
 source setup/ServiceBus-Emulator/.env
 set +a
 
