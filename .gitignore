@@ -1,0 +1,4 @@
+setup-db/.data/
+setup-db/.database/
+.env
+/.vs

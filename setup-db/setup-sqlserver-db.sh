@@ -1,0 +1,40 @@
+
+publish_sql_projects () {
+    # Publish the .dacpac using SqlPackage
+    if [ -z "${SQL_PASSWORD}" ]; then
+        echo "The SQL_PASSWORD is not set in .env. Fix "
+        exit 1
+    else
+        dotnet publish -c Release "src/mssql/Products/Products.csproj" /p:TargetUser=sa /p:TargetPassword=${SQL_PASSWORD}
+    fi
+}
+
+wait_sqlserver () {
+    # Configuration
+    HOST="localhost"
+    PORT=1433
+    RETRY_INTERVAL=15  # seconds
+    MAX_RETRIES=30
+
+    echo "Waiting for SQL Server to be available at $HOST:$PORT..."
+
+    for ((i=1; i<=MAX_RETRIES; i++)); do
+        if nc -z "$HOST" "$PORT"; then
+            echo "✅ SQL Server is up and running!"
+            return 0
+        else
+            echo "⏳ Attempt $i/$MAX_RETRIES: SQL Server not available yet. Retrying in $RETRY_INTERVAL seconds..."
+            sleep "$RETRY_INTERVAL"
+        fi
+    done
+
+    echo "❌ SQL Server did not become available after $((RETRY_INTERVAL * MAX_RETRIES)) seconds."
+    exit 1
+}
+
+main_call (){
+    wait_sqlserver
+    publish_sql_projects
+}
+
+main_call
