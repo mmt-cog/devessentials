@@ -35,43 +35,7 @@
                 ],
                 "Topics": [
                     {
-                        "Name": "datafeed-brazil",
-                        "Properties": {
-                            "DefaultMessageTimeToLive": "PT1H",
-                            "DuplicateDetectionHistoryTimeWindow": "PT20S",
-                            "RequiresDuplicateDetection": false
-                        },
-                        "Subscriptions": [
-                            {
-                                "Name": "datafeed-brazil-subscription",
-                                "Properties": {
-                                    "DeadLetteringOnMessageExpiration": false,
-                                    "DefaultMessageTimeToLive": "PT1H",
-                                    "LockDuration": "PT1M",
-                                    "MaxDeliveryCount": 3,
-                                    "ForwardDeadLetteredMessagesTo": "",
-                                    "ForwardTo": "",
-                                    "RequiresSession": false
-                                }
-                            },
-                            {
-                                "Name": "legacy-integrator-subscription",
-                                "Properties": {
-                                    "DeadLetteringOnMessageExpiration": false,
-                                    "DefaultMessageTimeToLive": "PT1H",
-                                    "DuplicateDetectionHistoryTimeWindow": "PT20S",
-                                    "ForwardDeadLetteredMessagesTo": "",
-                                    "ForwardTo": "consumer-collections",
-                                    "LockDuration": "PT1M",
-                                    "MaxDeliveryCount": 3,
-                                    "RequiresDuplicateDetection": false,
-                                    "RequiresSession": false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "Name": "topic.1",
+                        "Name": "product-samples",
                         "Properties": {
                             "DefaultMessageTimeToLive": "PT1H",
                             "DuplicateDetectionHistoryTimeWindow": "PT20S",
