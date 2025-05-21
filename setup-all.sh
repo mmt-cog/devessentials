@@ -7,15 +7,12 @@ if [ -z "$1" ]; then
 fi
 
 set -a
-source setup-db/.env
 source setup/ServiceBus-Emulator/.env
 set +a
 
 debug_action () {
     if [ "$1" == "debug" ]; then
         echo "SQL_PASSWORD==> $SQL_PASSWORD"
-        echo "MYSQL_PASSWORD==> $MYSQL_PASSWORD"
-        echo "MYSQL_TENANT==> $MYSQL_TENANT"        
     fi
 }
 
@@ -24,18 +21,18 @@ debug_action () {
 case "$1" in
   up)
     docker-compose -f setup/docker-compose.yml up -d
-    docker-compose -f apps/docker-compose.yml up -d
+    docker-compose -f src/azure-functions/docker-compose.yml up -d
     ;;
   down)
     docker-compose -f setup/docker-compose.yml down
-    docker-compose -f apps/docker-compose.yml down
+    docker-compose -f  src/azure-functions/docker-compose.yml down
     ;;
   initial)
-    docker-compose -f setup/docker-compose.yml up -d
+    #docker-compose -f setup/docker-compose.yml up -d
 
-    setup-db/setup-sqlserver-db.sh
+    #setup-db/setup-sqlserver-db.sh
 
-    docker-compose -f apps/docker-compose.yml up
+    docker-compose -f  src/azure-functions/docker-compose.yml up
     ;;
   debug)
     echo "Debug mode. No actions other than rendering variables"

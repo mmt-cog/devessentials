@@ -1,10 +1,10 @@
 services:
   demo.product.main: #I leave the old name here, otherwise each dev would need a docker-compose down --remove-orphans command
-    image: ${DOCKER_REGISTRY-}products.main
+    image: ${DOCKER_REGISTRY-}products.main:3.3
     container_name: productsmainfunction
     build:
       context: .
-      dockerfile: azure-functions/Products.Main/Dockerfile
+      dockerfile: Products.Main/Dockerfile
     environment:
       "ENV_ALIAS": "Development"
       "SERVICE_BUS": "Endpoint=sb://host.docker.internal;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;"
@@ -17,16 +17,18 @@ services:
        
       "AzureFunctionSettings:DestinationBucket": "file-repository"
 
-  demo.product.sendmail:
-    image: ${DOCKER_REGISTRY-}products.sendmail
-    container_name: productssendmailfunction
-    build:
-        context: .
-        dockerfile: azure-functions/Products.SendMail/Dockerfile
-    environment:
-      "SERVICE_BUS": "Endpoint=sb://host.docker.internal;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;"
-      "EmailQueue": "queue-mail"
-      "EmailHost": "host.docker.internal"
-      "EmailHostPort": "25"
-      "SendGridUsername": ""
-      "SendGridPassword": ""
+
+  # demo.product.sendmail:
+  #   image: ${DOCKER_REGISTRY-}products.sendmail
+  #   container_name: productssendmailfunction
+  #   build:
+  #       context: .
+  #       dockerfile: Products.SendMail/Dockerfile
+  #   environment:
+  #     "SERVICE_BUS": "Endpoint=sb://host.docker.internal;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;"
+  #     "EmailQueue": "queue-mail"
+  #     "EmailHost": "host.docker.internal"
+  #     "EmailHostPort": "25"
+  #     "SendGridUsername": ""
+  #     "SendGridPassword": ""
+

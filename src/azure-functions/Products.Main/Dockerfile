@@ -7,20 +7,20 @@ EXPOSE 8080
 
 
 # This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Debug
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["azure-functions/Products.SendMail/Products.SendMail.csproj", "azure-functions/Products.SendMail/"]
+COPY ["Products.Main/Products.Main.csproj", "Products.Main/"]
 
-RUN dotnet restore "./azure-functions/Products.SendMail/Products.SendMail.csproj"
+RUN dotnet restore "./Products.Main/Products.Main.csproj"
 COPY . .
-WORKDIR "/src/azure-functions/Products.SendMail"
-RUN dotnet build "./Products.SendMail.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Products.Main"
+RUN dotnet build "./Products.Main.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Debug
-RUN dotnet publish "./Products.SendMail.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Products.Main.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
